@@ -9,7 +9,7 @@ info:
 servers:
   - url: http://localhost:5000/api
     description: Local
-  - url: https://your-deployment-domain/api
+  - url: https://g2m-backend.vercel.app/api
     description: Production
 
 tags:

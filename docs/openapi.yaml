@@ -1,0 +1,549 @@
+openapi: 3.0.3
+info:
+  title: G2M Backend API
+  version: 1.0.0
+  description: |
+    REST API for the G2M e‑commerce platform. Includes authentication, user profile management,
+    products, orders, reviews, vouchers, and admin endpoints. JWT-based auth with refresh sessions,
+    Cloudinary uploads, and Nodemailer emails.
+servers:
+  - url: http://localhost:5000/api
+    description: Local
+  - url: https://your-deployment-domain/api
+    description: Production
+
+tags:
+  - name: Auth
+  - name: Products
+  - name: Reviews
+  - name: Orders
+  - name: User
+  - name: Admin
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+        data:
+          type: object
+          nullable: true
+          additionalProperties: true
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        email:
+          type: string
+          format: email
+        role:
+          type: string
+          enum: [customer, admin]
+        name:
+          type: string
+        image:
+          type: string
+        isVerified:
+          type: boolean
+    Product:
+      type: object
+      properties:
+        _id: { type: string }
+        sku: { type: string }
+        name: { type: string }
+        description: { type: string }
+        category: { type: string }
+        subcategory: { type: string }
+        price: { type: number }
+        discountPrice: { type: number, nullable: true }
+        mainImage: { type: string }
+        images: { type: array, items: { type: string } }
+        avgRating: { type: number }
+        numReviews: { type: number }
+    Order:
+      type: object
+      properties:
+        orderNumber: { type: string }
+        status:
+          type: string
+          enum: [pending, packaged, shipped, delivered, cancelled, refunded]
+        totalAmount: { type: number }
+        subTotal: { type: number }
+        tax: { type: number }
+        shippingCost: { type: number }
+        discountAmount: { type: number }
+    Review:
+      type: object
+      properties:
+        _id: { type: string }
+        product: { type: string }
+        rating: { type: integer, minimum: 1, maximum: 5 }
+        comment: { type: string }
+        images: { type: array, items: { type: string } }
+    Voucher:
+      type: object
+      properties:
+        code: { type: string }
+        type: { type: string, enum: [percentage, fixed] }
+        discount: { type: number }
+        isActive: { type: boolean }
+
+security:
+  - bearerAuth: []
+
+paths:
+  /:
+    get:
+      tags: [Health]
+      summary: Health check
+      security: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string }
+                  uptime: { type: number }
+                  database: { type: string }
+                  timestamp: { type: number }
+
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, format: password }
+                getUpdates: { type: boolean }
+      responses:
+        '201': { description: Created }
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, format: password }
+      responses:
+        '200': { description: OK }
+        '429': { description: Too many requests }
+
+  /auth/verify/{token}/{email}:
+    get:
+      tags: [Auth]
+      summary: Verify email
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema: { type: string }
+        - in: path
+          name: email
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Verified }
+
+  /auth/forget-password:
+    post:
+      tags: [Auth]
+      summary: Request password reset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: { type: string, format: email }
+      responses:
+        '200': { description: Email sent }
+
+  /auth/reset-password/{token}/{email}:
+    post:
+      tags: [Auth]
+      summary: Reset password
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema: { type: string }
+        - in: path
+          name: email
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [password]
+              properties:
+                password: { type: string, format: password }
+      responses:
+        '200': { description: Reset successful }
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Logout
+      responses:
+        '200': { description: Logged out }
+
+  /auth/refresh:
+    post:
+      tags: [Auth]
+      summary: Refresh access token
+      responses:
+        '200': { description: New access token }
+
+  /products:
+    get:
+      tags: [Products]
+      summary: List products
+      security: []
+      responses:
+        '200':
+          description: List of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Product' }
+
+  /products/{productId}:
+    get:
+      tags: [Products]
+      summary: Get product by id
+      security: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+
+  /reviews:
+    get:
+      tags: [Reviews]
+      summary: List current user reviews
+      responses:
+        '200': { description: OK }
+
+  /reviews/{productId}:
+    post:
+      tags: [Reviews]
+      summary: Add a review with optional images (multipart)
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [rating]
+              properties:
+                rating: { type: integer, minimum: 1, maximum: 5 }
+                comment: { type: string }
+                images:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        '201': { description: Created }
+
+  /orders/voucher:
+    get:
+      tags: [Orders]
+      summary: Validate voucher
+      responses:
+        '200': { description: OK }
+
+  /orders:
+    get:
+      tags: [Orders]
+      summary: List user orders
+      responses:
+        '200': { description: OK }
+    post:
+      tags: [Orders]
+      summary: Create an order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                products:
+                  type: array
+                  items:
+                    type: object
+      responses:
+        '201': { description: Created }
+
+  /orders/{orderNumber}:
+    get:
+      tags: [Orders]
+      summary: Get an order by number
+      parameters:
+        - in: path
+          name: orderNumber
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+    patch:
+      tags: [Orders]
+      summary: Cancel an order
+      parameters:
+        - in: path
+          name: orderNumber
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Cancelled }
+
+  /user/profile:
+    get:
+      tags: [User]
+      summary: Get profile
+      responses:
+        '200':
+          description: Profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    patch:
+      tags: [User]
+      summary: Update profile (multipart for avatar)
+      requestBody:
+        required: false
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+                name: { type: string }
+                phone: { type: string }
+      responses:
+        '200': { description: Updated }
+
+  /user/profile/edit-password:
+    patch:
+      tags: [User]
+      summary: Change password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [oldPassword, newPassword]
+              properties:
+                oldPassword: { type: string }
+                newPassword: { type: string }
+      responses:
+        '200': { description: Updated }
+
+  /user/profile/edit-email:
+    patch:
+      tags: [User]
+      summary: Start email change
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: { type: string, format: email }
+      responses:
+        '200': { description: Email sent }
+
+  /user/cart:
+    post:
+      tags: [User]
+      summary: Add to cart
+      responses:
+        '200': { description: OK }
+    delete:
+      tags: [User]
+      summary: Clear cart
+      responses:
+        '200': { description: OK }
+
+  /user/cart/{productId}:
+    patch:
+      tags: [User]
+      summary: Edit cart item
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+    delete:
+      tags: [User]
+      summary: Remove cart item
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+
+  /user/wishlist:
+    post:
+      tags: [User]
+      summary: Add to wishlist
+      responses:
+        '200': { description: OK }
+    delete:
+      tags: [User]
+      summary: Clear wishlist
+      responses:
+        '200': { description: OK }
+
+  /user/wishlist/{productId}:
+    delete:
+      tags: [User]
+      summary: Remove wishlist item
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+
+  /user/address:
+    post:
+      tags: [User]
+      summary: Add address
+      responses:
+        '201': { description: Created }
+
+  /user/address/{addressId}:
+    patch:
+      tags: [User]
+      summary: Edit address
+      parameters:
+        - in: path
+          name: addressId
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+    delete:
+      tags: [User]
+      summary: Delete address
+      parameters:
+        - in: path
+          name: addressId
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+
+  /user/sessions:
+    delete:
+      tags: [User]
+      summary: Revoke all sessions
+      responses:
+        '200': { description: OK }
+
+  /user/sessions/{sessionId}:
+    delete:
+      tags: [User]
+      summary: Revoke one session
+      parameters:
+        - in: path
+          name: sessionId
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+
+  # Admin subset examples (all require admin JWT)
+  /admin/users:
+    get:
+      tags: [Admin]
+      summary: List users (admin)
+      responses:
+        '200': { description: OK }
+
+  /admin/products:
+    get:
+      tags: [Admin]
+      summary: List products (admin)
+      responses:
+        '200': { description: OK }
+    post:
+      tags: [Admin]
+      summary: Create product (multipart)
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [sku, name, category, subcategory, price, mainImage]
+              properties:
+                sku: { type: string }
+                name: { type: string }
+                description: { type: string }
+                category: { type: string }
+                subcategory: { type: string }
+                price: { type: number }
+                mainImage:
+                  type: string
+                  format: binary
+                images:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        '201': { description: Created }

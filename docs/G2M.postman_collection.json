@@ -1,0 +1,2064 @@
+{
+	"info": {
+		"_postman_id": "e0ed6689-31be-4695-86b9-d441fc214afc",
+		"name": "G2M",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44409451"
+	},
+	"item": [
+		{
+			"name": "AdminIn",
+			"item": [
+				{
+					"name": "OrdersControl",
+					"item": [
+						{
+							"name": "GetOrders",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/api/admin/orders?status=delivered&paymentStatus=completed&paymentMethod=credit_card&startDate=2025-01-01&endDate=2025-12-31&minTotal=100&maxTotal=1000&userEmail=john@example.com&userName=John&orderNumber=ORD-172839&search=sticker&sortBy=totalAmount&order=desc&page=2&limit=20",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"orders"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "delivered"
+										},
+										{
+											"key": "paymentStatus",
+											"value": "completed"
+										},
+										{
+											"key": "paymentMethod",
+											"value": "credit_card"
+										},
+										{
+											"key": "startDate",
+											"value": "2025-01-01"
+										},
+										{
+											"key": "endDate",
+											"value": "2025-12-31"
+										},
+										{
+											"key": "minTotal",
+											"value": "100"
+										},
+										{
+											"key": "maxTotal",
+											"value": "1000"
+										},
+										{
+											"key": "userEmail",
+											"value": "john@example.com"
+										},
+										{
+											"key": "userName",
+											"value": "John"
+										},
+										{
+											"key": "orderNumber",
+											"value": "ORD-172839"
+										},
+										{
+											"key": "search",
+											"value": "sticker"
+										},
+										{
+											"key": "sortBy",
+											"value": "totalAmount"
+										},
+										{
+											"key": "order",
+											"value": "desc"
+										},
+										{
+											"key": "page",
+											"value": "2"
+										},
+										{
+											"key": "limit",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EditOrderStatus",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"status\": \"delivered\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/api/admin/orders/:orderNumber",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"orders",
+										":orderNumber"
+									],
+									"variable": [
+										{
+											"key": "orderNumber",
+											"value": "ORD-1757559040256"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "ProductsControl",
+					"item": [
+						{
+							"name": "GetProducts",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/api/admin/products?category=Stickers&subcategory=Anime&tags=laptop,phone&tagsMode=all&active=true&hasDiscount=true&discountActive=true&hasImages=true&stock=low&lowStockThreshold=10&minStock=1&maxStock=100&minPrice=50&maxPrice=500&minRating=3&maxRating=5&minSold=10&maxSold=500&createdBy=64a1f5c4e9b7a0f123456789&updatedBy=64a1f5c4e9b7a0f987654321&createdFrom=2025-01-01&createdTo=2025-09-01&updatedFrom=2025-08-01&updatedTo=2025-09-08&search=naruto&select=sku,name,price,stock,avgRating,createdBy,lastUpdatedBy&sortBy=price&order=asc&page=1&limit=20",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"products"
+									],
+									"query": [
+										{
+											"key": "category",
+											"value": "Stickers"
+										},
+										{
+											"key": "subcategory",
+											"value": "Anime"
+										},
+										{
+											"key": "tags",
+											"value": "laptop,phone"
+										},
+										{
+											"key": "tagsMode",
+											"value": "all"
+										},
+										{
+											"key": "active",
+											"value": "true"
+										},
+										{
+											"key": "hasDiscount",
+											"value": "true"
+										},
+										{
+											"key": "discountActive",
+											"value": "true"
+										},
+										{
+											"key": "hasImages",
+											"value": "true"
+										},
+										{
+											"key": "stock",
+											"value": "low"
+										},
+										{
+											"key": "lowStockThreshold",
+											"value": "10"
+										},
+										{
+											"key": "minStock",
+											"value": "1"
+										},
+										{
+											"key": "maxStock",
+											"value": "100"
+										},
+										{
+											"key": "minPrice",
+											"value": "50"
+										},
+										{
+											"key": "maxPrice",
+											"value": "500"
+										},
+										{
+											"key": "minRating",
+											"value": "3"
+										},
+										{
+											"key": "maxRating",
+											"value": "5"
+										},
+										{
+											"key": "minSold",
+											"value": "10"
+										},
+										{
+											"key": "maxSold",
+											"value": "500"
+										},
+										{
+											"key": "createdBy",
+											"value": "64a1f5c4e9b7a0f123456789"
+										},
+										{
+											"key": "updatedBy",
+											"value": "64a1f5c4e9b7a0f987654321"
+										},
+										{
+											"key": "createdFrom",
+											"value": "2025-01-01"
+										},
+										{
+											"key": "createdTo",
+											"value": "2025-09-01"
+										},
+										{
+											"key": "updatedFrom",
+											"value": "2025-08-01"
+										},
+										{
+											"key": "updatedTo",
+											"value": "2025-09-08"
+										},
+										{
+											"key": "search",
+											"value": "naruto"
+										},
+										{
+											"key": "select",
+											"value": "sku,name,price,stock,avgRating,createdBy,lastUpdatedBy"
+										},
+										{
+											"key": "sortBy",
+											"value": "price"
+										},
+										{
+											"key": "order",
+											"value": "asc"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetProduct",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/api/admin/products/:productSKU",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"products",
+										":productSKU"
+									],
+									"variable": [
+										{
+											"key": "productSKU",
+											"value": "LS-000533"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AddProduct",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "sku",
+											"value": "LS-000533",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "Naruto",
+											"type": "text"
+										},
+										{
+											"key": "category",
+											"value": "Stickers",
+											"type": "text"
+										},
+										{
+											"key": "subcategory",
+											"value": "Anime",
+											"type": "text"
+										},
+										{
+											"key": "tags",
+											"value": "laptop,walls",
+											"contentType": "",
+											"type": "text"
+										},
+										{
+											"key": "price",
+											"value": "100",
+											"type": "text"
+										},
+										{
+											"key": "mainImage",
+											"type": "file",
+											"src": "/C:/Users/mmmma/OneDrive/Desktop/1170958-mern-stack-wallpaper-top-free-mern-stack-background.jpg"
+										},
+										{
+											"key": "description",
+											"value": "aaa",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "stock",
+											"value": "5",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "discountPrice",
+											"value": "5",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "discountActive",
+											"value": "true",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "images",
+											"type": "file",
+											"src": [
+												"/C:/Users/mmmma/OneDrive/Desktop/mvcicon.png",
+												"/C:/Users/mmmma/OneDrive/Desktop/mvicon.png"
+											],
+											"disabled": true
+										},
+										{
+											"key": "width",
+											"value": "",
+											"description": "optional with default categories sizes",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "height",
+											"value": "",
+											"description": "optional with default categories sizes",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "depth",
+											"value": "",
+											"description": "optional with default categories sizes",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseURL}}/api/admin/products",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EditProduct",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "sku",
+											"value": "LS-0001",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "name",
+											"value": "Naruto",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "category",
+											"value": "Stickers",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "subcategory",
+											"value": "Anime",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "tags",
+											"value": "lapatop, walsls",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "price",
+											"value": "100",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "mainImage",
+											"type": "file",
+											"src": "/C:/Users/mmmma/OneDrive/Desktop/mvcicon.png",
+											"disabled": true
+										},
+										{
+											"key": "description",
+											"value": "ssafqqa",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "stock",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "discountPrice",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "discountActive",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "images",
+											"type": "file",
+											"src": "/C:/Users/mmmma/OneDrive/Desktop/MarceVerse.jpg",
+											"disabled": true
+										},
+										{
+											"key": "images",
+											"value": "",
+											"description": "for passing the needed existing images url",
+											"type": "text"
+										},
+										{
+											"key": "width",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "height",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "depth",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseURL}}/api/admin/products/:productSKU",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"products",
+										":productSKU"
+									],
+									"variable": [
+										{
+											"key": "productSKU",
+											"value": "LS-000533"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteProduct",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/api/admin/products/:productSKU",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"products",
+										":productSKU"
+									],
+									"variable": [
+										{
+											"key": "productSKU",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "ReviewsControl",
+					"item": [
+						{
+							"name": "GetReviews",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/api/admin/reviews?user=66ef4c...&product=77adf9...&minRating=3&maxRating=5&search=quality&startDate=2025-01-01&endDate=2025-09-01&page=2&limit=10&sortBy=rating&sortOrder=asc",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"reviews"
+									],
+									"query": [
+										{
+											"key": "user",
+											"value": "66ef4c..."
+										},
+										{
+											"key": "product",
+											"value": "77adf9..."
+										},
+										{
+											"key": "minRating",
+											"value": "3"
+										},
+										{
+											"key": "maxRating",
+											"value": "5"
+										},
+										{
+											"key": "search",
+											"value": "quality"
+										},
+										{
+											"key": "startDate",
+											"value": "2025-01-01"
+										},
+										{
+											"key": "endDate",
+											"value": "2025-09-01"
+										},
+										{
+											"key": "page",
+											"value": "2"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										},
+										{
+											"key": "sortBy",
+											"value": "rating"
+										},
+										{
+											"key": "sortOrder",
+											"value": "asc"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteReview",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/api/admin/reviews/:reviewId",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"reviews",
+										":reviewId"
+									],
+									"variable": [
+										{
+											"key": "reviewId",
+											"value": "68c23c872fd19cc4b68967f5"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "VouchersControl",
+					"item": [
+						{
+							"name": "GetVouchers",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/api/admin/vouchers?code=WELCOME0&isActive=true&type=percentage&expired=false&minDiscount=20&maxDiscount=80&page=1&limit=20",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"vouchers"
+									],
+									"query": [
+										{
+											"key": "code",
+											"value": "WELCOME0"
+										},
+										{
+											"key": "isActive",
+											"value": "true"
+										},
+										{
+											"key": "type",
+											"value": "percentage"
+										},
+										{
+											"key": "expired",
+											"value": "false"
+										},
+										{
+											"key": "minDiscount",
+											"value": "20"
+										},
+										{
+											"key": "maxDiscount",
+											"value": "80"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AddVoucher",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"WELCOME0\",\r\n    \"discount\": 50,\r\n    \"type\": \"percentage\",\r\n    \"expiryDate\": \"2025-12-31\",\r\n    \"minPurchase\": 200,\r\n    \"usageLimit\": 100\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/api/admin/vouchers",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"vouchers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EditVoucher",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"isActive\": false,\r\n    \"usageLimit\": 200\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/api/admin/vouchers/:voucherId",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"vouchers",
+										":voucherId"
+									],
+									"variable": [
+										{
+											"key": "voucherId",
+											"value": "68c45dd06cdb23c7f65520ef"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteVoucher",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/api/admin/vouchers/:voucherId",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"vouchers",
+										":voucherId"
+									],
+									"variable": [
+										{
+											"key": "voucherId",
+											"value": "68c45dd06cdb23c7f65520ef"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "NotificationsSystem",
+					"item": [
+						{
+							"name": "GetNotifications",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/api/admin/notifications",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"notifications"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "MarkNotificationRead",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/api/admin/notifications/:notificationId",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"notifications",
+										":notificationId"
+									],
+									"variable": [
+										{
+											"key": "notificationId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "MarkNotificationsRead",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/api/admin/notifications/read-all",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"notifications",
+										"read-all"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "SendAnnouncement",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"subject\": \"hi\",\r\n    \"message\": \"<p style='color: red'>hi </p>\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/admin/announcement",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"announcement"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "UserAuth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"b66e1e76df@webxios.pro\",\r\n    \"password\": \"123456\",\r\n    \"getUpdates\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/auth/register",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n    \"email\": \"c2b998680b@webxios.pro\",\r\n    \"password\": \"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "VerifyEmail",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/auth/verify/:token/:email",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"verify",
+								":token",
+								":email"
+							],
+							"variable": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YmM3MDU3MzYyZWIwNjk1YjZiMmI2YyIsImlhdCI6MTc1NzE4MDcxMiwiZXhwIjoxNzU3MTkyNDAwfQ.tKnqzNBics2GH3lZ79xhiLSnFPaAx-MBuL0zhixaQPI"
+								},
+								{
+									"key": "email",
+									"value": "87af666554@webxios.pro"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ForgetPassword",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"4e50c26b17@webxios.pro\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/auth/forget-password",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"forget-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ResetPassword",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"newPassword\": \"123456789\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/auth/reset-password/:token/:email",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"reset-password",
+								":token",
+								":email"
+							],
+							"variable": [
+								{
+									"key": "token",
+									"value": "d1184204a0be8c09134741db5180f69aef906eb8045b26d87562db57edf2b6fa"
+								},
+								{
+									"key": "email",
+									"value": "453648a741@webxios.pro"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/auth/logout",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RefreshToken",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"expiredToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YmM3MDU3MzYyZWIwNjk1YjZiMmI2YyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NzQxNzI1MCwiZXhwIjoxNzU3NDIwODUwfQ.5hcZL4U2kHNIcuuyh4P1y9dLYBAcZIgroZg6hA9n_NI\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/auth/refresh",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "UserIn",
+			"item": [
+				{
+					"name": "Profile",
+					"item": [
+						{
+							"name": "EditProfile",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Marmoor",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "birthdate",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "getUpdates",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "isFirstLogin",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "/C:/Users/mmmma/OneDrive/Desktop/85131-computer-engineer-wallpaper-top-free-computer-engineer.jpg",
+											"disabled": true
+										},
+										{
+											"key": "image",
+											"value": "",
+											"description": "for passing the needed existing images url",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseURL}}/api/user/profile",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EditPassword",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"currentPassword\": \"123456\",\r\n    \"newPassword\": \"123456789\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/api/user/profile/edit-password",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"profile",
+										"edit-password"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EditEmail",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"newEmail\": \"c2b998680b@webxios.pro\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/api/user/profile/edit-email",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"profile",
+										"edit-email"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cart",
+					"item": [
+						{
+							"name": "AddToCart",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"productId\": \"68bb7dc239b684fe135d29ae\",\r\n    \"quantity\": 2\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/api/user/cart",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"cart"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EditCartItem",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"quantity\": 5\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/api/user/cart/:productId",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"cart",
+										":productId"
+									],
+									"variable": [
+										{
+											"key": "productId",
+											"value": "68bb7dc239b684fe135d29ae"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteCartItem",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/api/user/cart/:productId",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"cart",
+										":productId"
+									],
+									"variable": [
+										{
+											"key": "productId",
+											"value": "68bb7dc239b684fe135d29ae"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteCart",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/api/user/cart",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"cart"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Wishlist",
+					"item": [
+						{
+							"name": "AddToWishlist",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"productId\": \"68bc02bd3745fa35526c9a29\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/api/user/wishlist",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"wishlist"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteWishlistItem",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/api/user/wishlist/:productId",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"wishlist",
+										":productId"
+									],
+									"variable": [
+										{
+											"key": "productId",
+											"value": "68bc02bd3745fa35526c9a29"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteWishlist",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/api/user/wishlist",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"wishlist"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Address",
+					"item": [
+						{
+							"name": "AddAddress",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \r\n    \"firstName\": \"maro\",\r\n    \"lastName\": \"Emad\",\r\n    \"country\": \"yoght\",\r\n    \"state\": \"Sohag\",\r\n    \"city\": \"Sohag\",\r\n    \"street1\": \"15\",\r\n    \"phone\": \"122\",\r\n\r\n    \"street2\": \"13\",\r\n    \"zip\": \"123456\",\r\n    \"type\": \"shipping\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/api/user/address",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"address"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EditAddress",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \r\n    \"firstName\": \"maro\",\r\n    \"lastName\": \"Emad\",\r\n    \"country\": \"yoght\",\r\n    \"state\": \"Sohag\",\r\n    \"city\": \"Sohag\",\r\n    \"street1\": \"15\",\r\n    \"phone\": \"122\",\r\n\r\n    \"street2\": \"13\",\r\n    \"zip\": \"123456\",\r\n    \"type\": \"shipping\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/api/user/address/:addressId",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"address",
+										":addressId"
+									],
+									"variable": [
+										{
+											"key": "addressId",
+											"value": "68bc773f9669d13328b70337"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteAddress",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/api/user/address/:addressId",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"address",
+										":addressId"
+									],
+									"variable": [
+										{
+											"key": "addressId",
+											"value": "68bc773f9669d13328b70337"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Session",
+					"item": [
+						{
+							"name": "DeleteSession",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/api/user/sessions/:sessionId",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"sessions",
+										":sessionId"
+									],
+									"variable": [
+										{
+											"key": "sessionId",
+											"value": "68bc02bd3745fa35526c9a29"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteSessions",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/api/user/sessions",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"sessions"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "GetProfile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/user/profile",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "GetProducts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/products?category=Stickers&subcategory=Anime&tags=laptop,wall&stock=in&minPrice=50&maxPrice=200&minRating=0&search=aaa&sortBy=price&order=asc&page=1&limit=5",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"products"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "Stickers"
+								},
+								{
+									"key": "subcategory",
+									"value": "Anime"
+								},
+								{
+									"key": "tags",
+									"value": "laptop,wall"
+								},
+								{
+									"key": "stock",
+									"value": "in"
+								},
+								{
+									"key": "minPrice",
+									"value": "50"
+								},
+								{
+									"key": "maxPrice",
+									"value": "200"
+								},
+								{
+									"key": "minRating",
+									"value": "0"
+								},
+								{
+									"key": "search",
+									"value": "aaa"
+								},
+								{
+									"key": "sortBy",
+									"value": "price"
+								},
+								{
+									"key": "order",
+									"value": "asc"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetProduct",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/products/:productId",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"products",
+								":productId"
+							],
+							"variable": [
+								{
+									"key": "productId",
+									"value": "68c238d73615014c74181e57"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "GetOrders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/orders",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetOrder",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/orders/:orderNumber",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								":orderNumber"
+							],
+							"variable": [
+								{
+									"key": "orderNumber",
+									"value": "ORD-1757466764893"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddOrder",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"products\": [\r\n    { \"product\": \"68bcc8aec6eedb1369f33e94\", \"quantity\": 2 }\r\n  ],\r\n  \"tax\": 50,\r\n  \"shippingCost\": 30,\r\n  \"shippingAddress\": {\r\n    \"firstName\": \"John\",\r\n    \"lastName\": \"Doe\",\r\n    \"country\": \"Egypt\",\r\n    \"state\": \"Cairo\",\r\n    \"city\": \"Nasr City\",\r\n    \"street1\": \"123 Example St\",\r\n    \"zip\": \"11371\",\r\n    \"phone\": \"01012345678\"\r\n  },\r\n  \"billingAddress\": {\r\n    \"firstName\": \"John\",\r\n    \"lastName\": \"Doe\",\r\n    \"country\": \"Egypt\",\r\n    \"state\": \"Cairo\",\r\n    \"city\": \"Nasr City\",\r\n    \"street1\": \"123 Example St\",\r\n    \"zip\": \"11371\",\r\n    \"phone\": \"01012345678\"\r\n  },\r\n  \"paymentInfo\": {\r\n    \"method\": \"cod\",\r\n    \"amount\": 200\r\n  },\r\n\r\n  \"notes\": \"Optional\",\r\n  \"usedVoucher\": \"Optional\",\r\n\r\n  \"user\": \"for manual order put (admin only)\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/orders",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CancelOrder",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/orders/:orderNumber",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								":orderNumber"
+							],
+							"variable": [
+								{
+									"key": "orderNumber",
+									"value": "ORD-1757466764893"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetVocuher",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"code\": \"WELCOME50\",\r\n    \"subTotal\": 600\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/orders/voucher",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"voucher"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reviews",
+			"item": [
+				{
+					"name": "AddReview",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "rating",
+									"value": "5",
+									"description": "from 1 to 5",
+									"type": "text"
+								},
+								{
+									"key": "comment",
+									"value": "tot",
+									"description": "optional",
+									"type": "text"
+								},
+								{
+									"key": "images",
+									"description": "optional - up to 2 files",
+									"type": "file",
+									"src": "/C:/Users/mmmma/OneDrive/Desktop/1170958-mern-stack-wallpaper-top-free-mern-stack-background.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/reviews/:productId",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"reviews",
+								":productId"
+							],
+							"variable": [
+								{
+									"key": "productId",
+									"value": "68c238d73615014c74181e57"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetReviews",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/reviews",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"reviews"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "HealthCheck",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YmM3MDU3MzYyZWIwNjk1YjZiMmI2YyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NzcxOTcyMCwiZXhwIjoxNzU3NzIzMzIwfQ.ZqMN9tSpwjWS1L4W8WgrcC2ZaRbkYMefmxJkQIMF4x4",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": ""
+		}
+	]
+}

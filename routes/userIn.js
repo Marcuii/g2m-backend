@@ -16,6 +16,7 @@ const editPassword = require('../controllers/userIn/profile/editPassword');
 const editEmail = require('../controllers/userIn/profile/editEmail');
 
 // Cart management controllers
+const getCheckout = require('../controllers/userIn/cart/getCheckout');
 const addToCart = require('../controllers/userIn/cart/addToCart');
 const editCartItem = require('../controllers/userIn/cart/editCartItem');
 const deleteCartItem = require('../controllers/userIn/cart/deleteCartItem');
@@ -43,6 +44,7 @@ router.route("/profile/edit-password").patch(userInAuth, editPassword);
 router.route("/profile/edit-email").patch(userInAuth, editEmail);
 
 // Cart management routes
+router.route("/cart/checkout").get(userInAuth, getCheckout);
 router.route("/cart").post(userInAuth, addToCart);
 router.route("/cart/:productId").patch(userInAuth, editCartItem);
 router.route("/cart/:productId").delete(userInAuth, deleteCartItem);

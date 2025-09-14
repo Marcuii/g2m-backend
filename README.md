@@ -180,7 +180,7 @@ User-In (`/user`) [Auth]
 - PATCH `/profile` – Update profile (supports avatar image: field `image`)
 - PATCH `/profile/edit-password` – Change password
 - PATCH `/profile/edit-email` – Start email change flow
-- Cart: POST `/cart`, PATCH `/cart/:productId`, DELETE `/cart/:productId`, DELETE `/cart`
+- Cart: GET `/cart/checkout`, POST `/cart`, PATCH `/cart/:productId`, DELETE `/cart/:productId`, DELETE `/cart`
 - Wishlist: POST `/wishlist`, DELETE `/wishlist/:productId`, DELETE `/wishlist`
 - Address: POST `/address`, PATCH `/address/:addressId`, DELETE `/address/:addressId`
 - Sessions: DELETE `/sessions/:sessionId`, DELETE `/sessions`

@@ -2,8 +2,9 @@
 const User = require("../../models/User");
 const Order = require("../../models/Order");
 const Review = require("../../models/Review");
+const Product = require("../../models/Product");
 
-const getMe = async (req, res) => {
+const getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user)
       .select("-password -_id -isVerified -__v")
@@ -15,6 +16,14 @@ const getMe = async (req, res) => {
         path: "reviews",
         select: "product rating comment images createdAt",
         populate: { path: "product", select: "name mainImage" },
+      })
+      .populate({
+        path: "cart.product",
+        select: "name mainImage price",
+      })
+      .populate({
+        path: "wishlist.product",
+        select: "name mainImage price",
       });
     return res.status(200).json({
       status: 200,
@@ -52,4 +61,4 @@ const getMe = async (req, res) => {
   }
 };
 
-module.exports = getMe;
+module.exports = getProfile;

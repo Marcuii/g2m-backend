@@ -434,6 +434,64 @@ paths:
       responses:
         '200': { description: OK }
 
+  /user/cart/checkout:
+    get:
+      tags: [User]
+      summary: Get checkout details
+      description: Retrieves cart items with calculated subtotal for checkout process
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Checkout details retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: integer, example: 200 }
+                  data:
+                    $ref: '#/components/schemas/CheckoutResponse'
+        '400':
+          description: Bad request (cart is empty or insufficient stock)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: integer, example: 400 }
+                  data:
+                    type: object
+                    properties:
+                      data: { type: object, nullable: true }
+                      message: { type: string, example: "Cart is empty" }
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: integer, example: 404 }
+                  data:
+                    type: object
+                    properties:
+                      data: { type: object, nullable: true }
+                      message: { type: string, example: "User not found" }
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: integer, example: 500 }
+                  data:
+                    type: object
+                    properties:
+                      data: { type: object, nullable: true }
+                      message: { type: string }
+
   /user/wishlist:
     post:
       tags: [User]

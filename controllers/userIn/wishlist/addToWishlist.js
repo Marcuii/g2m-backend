@@ -1,5 +1,6 @@
 // Controller to add a product to the user's wishlist
 const User = require("../../../models/User");
+const Product = require("../../../models/Product");
 
 const addToWishlist = async (req, res) => {
   try {
@@ -10,6 +11,16 @@ const addToWishlist = async (req, res) => {
         data: {
           data: null,
           message: "Product ID is required",
+        },
+      });
+
+    const product = await Product.findById(productId);
+    if (!product)
+      return res.status(404).json({
+        status: 404,
+        data: {
+          data: null,
+          message: "Product not found",
         },
       });
 

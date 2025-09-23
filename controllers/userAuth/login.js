@@ -47,14 +47,14 @@ const login = async (req, res) => {
 
       const verifyUrl = `${process.env.CLIENT_URL}/verify?email=${email}&token=${token}`;
 
-      await sendEmail(
-        email,
-        "Resend: Confirm your G2M Account",
-        `<h2>Welcome to G2M!</h2>
+      await sendEmail({
+        to: email,
+        subject: "Resend: Confirm your G2M Account",
+        html: `<h2>Welcome to G2M!</h2>
             <p>Please confirm your email by clicking the link below:</p>
             <a href="${verifyUrl}">${verifyUrl}</a>
-            <p>This link will expire in 1 hour.</p>`
-      );
+            <p>This link will expire in 1 hour.</p>`,
+      });
 
       return res.status(403).json({
         status: 403,
@@ -73,6 +73,7 @@ const login = async (req, res) => {
     const ip = req.ip || req.connection.remoteAddress;
 
     user.sessions.push({
+      accessToken,
       refreshToken,
       device,
       ip,
@@ -81,16 +82,18 @@ const login = async (req, res) => {
     });
     await user.save();
 
-    res.cookie("refreshToken", refreshToken, {
+    // Set tokens in HTTP-only cookies
+    res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
+      maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
     });
 
     return res.status(200).json({
       status: 200,
       data: {
-        token: accessToken,
+        data: null,
         message: "Login successful",
       },
     });

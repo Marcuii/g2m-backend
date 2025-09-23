@@ -1,7 +1,7 @@
 // Utility to send emails using nodemailer
 const nodemailer = require("nodemailer");
 
-const sendEmail = async (to, subject, html) => {
+const sendEmail = async ({to, subject, html}) => {
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -12,7 +12,7 @@ const sendEmail = async (to, subject, html) => {
     });
 
     const recipients = Array.isArray(to) ? to.join(",") : to;
-
+    
     await transporter.sendMail({
       from: `"G2M Store" <${process.env.EMAIL_USER}>`,
       to: recipients,

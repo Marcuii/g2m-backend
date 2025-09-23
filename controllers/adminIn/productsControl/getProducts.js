@@ -187,6 +187,7 @@ const getAdminProducts = async (req, res) => {
     const products = await Product.find(filter)
       .select(projection)
       .populate("createdBy lastUpdatedBy", "name")
+      .populate("category", "name")
       .sort(sortOptions)
       .skip(skip)
       .limit(Number(limit));

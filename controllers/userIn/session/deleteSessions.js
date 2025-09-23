@@ -19,7 +19,7 @@ const deleteSessions = async (req, res) => {
 
     await user.save();
 
-    res.clearCookie("refreshToken", {
+    res.clearCookie("accessToken", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",

@@ -6,6 +6,7 @@ const getUserOrders = async (req, res) => {
     const userId = req.user;
     const orders = await Order.find({ user: userId })
       .select("-_id -createdBy -lastUpdatedBy -updatedAt -__v")
+      .populate("user", "name email")
       .sort({ createdAt: -1 });
 
     return res.status(200).json({

@@ -10,7 +10,13 @@ const getUser = async (req, res) => {
     const user = await User.findById(userId)
       .select("-password -resetPasswordToken -resetPasswordExpires")
       .populate("orders")
-      .populate("reviews");
+      .populate({
+        path: "reviews",
+        select: "product rating comment images createdAt",
+        populate: { path: "product", select: "sku name mainImage" },
+      })
+      .populate("orders", "orderNumber totalAmount status createdAt")
+      .populate("wishlist cart", "sku name mainImage");
 
     if (!user) {
       return res.status(404).json({

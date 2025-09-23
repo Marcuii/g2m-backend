@@ -18,6 +18,7 @@ const editOrderStatus = async (req, res) => {
     } else if (
       ![
         "pending",
+        "confirmed",
         "packaged",
         "shipped",
         "delivered",
@@ -45,7 +46,6 @@ const editOrderStatus = async (req, res) => {
       });
 
     if (
-      order.status === "delivered" ||
       order.status === "cancelled" ||
       order.status === "refunded"
     ) {
@@ -77,7 +77,7 @@ const editOrderStatus = async (req, res) => {
     await order.save();
 
     // Notify user via email about status change
-    const user = await User.findById(order.user);
+    const user = await User.findById(order.user);    
     if (user && user.email) {
       if (status === "delivered") {
         await sendEmail({

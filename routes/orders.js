@@ -7,7 +7,7 @@ const router = express.Router();
 const userInAuth = require('../middleware/userInAuth');
 
 // Order management controllers
-const getVoucher = require('../controllers/order/getVoucher'); // for voucher validation
+const getVoucher = require('../controllers/voucher/getVoucher'); // for voucher validation
 const getOrder = require('../controllers/order/getOrder');
 const getOrders = require('../controllers/order/getOrders');
 const addOrder = require('../controllers/order/addOrder');

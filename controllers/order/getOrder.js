@@ -14,10 +14,10 @@ const getOrder = async (req, res) => {
       });
     }
 
-    const order = await Order.findOne({ orderNumber }).populate(
-      "user",
-      "name email"
-    );
+    const order = await Order.findOne({ orderNumber })
+    .populate("user", "name email")
+    .populate("usedVoucher", "code discountType discountValue")
+    .populate("createdBy lastUpdatedBy", "name email");
 
     if (!order)
       return res.status(404).json({

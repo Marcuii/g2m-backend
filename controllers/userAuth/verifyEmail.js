@@ -33,12 +33,12 @@ const verifyEmail = async (req, res) => {
       user.isVerified = true;
 
       await user.save();
-      await sendEmail(
-        email,
-        "Your G2M Account has been Verified",
-        `<h2>Congratulations!</h2>
-        <p>Your email has been successfully verified. You can now log in to your account.</p>`
-      );
+      await sendEmail({
+        to: email,
+        subject: "Your G2M Account has been Verified",
+        html: `<h2>Congratulations!</h2>
+        <p>Your email has been successfully verified. You can now log in to your account.</p>`,
+      });
     } else if (user.pendingEmail && user.pendingEmail === email) {
       if (user.pendingEmailExpires > Date.now()) {
         user.email = user.pendingEmail;
@@ -46,12 +46,12 @@ const verifyEmail = async (req, res) => {
         user.pendingEmailExpires = null;
 
         await user.save();
-        await sendEmail(
-          email,
-          "Your G2M Account has been Verified",
-          `<h2>Congratulations!</h2>
-          <p>Your new email has been successfully verified and updated in our system.</p>`
-        );
+        await sendEmail({
+          to: email,
+          subject: "Your G2M Account has been Verified",
+          html: `<h2>Congratulations!</h2>
+          <p>Your new email has been successfully verified and updated in our system.</p>`,
+        });
       } else {
         user.pendingEmail = null;
         user.pendingEmailExpires = null;

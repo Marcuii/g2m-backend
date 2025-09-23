@@ -6,9 +6,18 @@ const productSchema = new mongoose.Schema(
     sku: { type: String, unique: true, required: true }, // SKU code
     name: { type: String, required: true },
     description: { type: String, default: "" },
-    category: { type: String, required: true }, // Stickers, Skins, Posters, etc.
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
+    },
     subcategory: { type: String, required: true }, // Anime, Nature, Abstract, etc.
     tags: [{ type: String }], // suitable for laptop, phone, wall, etc.
+    sortTag: {
+      type: String,
+      enum: ["Today's Offer", "New Arrival", "Best Seller", "Featured", "Others"],
+      default: "Others",
+    }, // New Arrival, Best Seller, Featured, etc.
     stock: { type: Number, default: 1 },
     price: { type: Number, required: true },
     discountPrice: { type: Number, default: null },

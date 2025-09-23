@@ -41,14 +41,6 @@ const addToCart = async (req, res) => {
           message: "Product is out of stock",
         },
       });
-    if (product.stock < (quantity || 1))
-      return res.status(400).json({
-        status: 400,
-        data: {
-          data: null,
-          message: "Insufficient product stock",
-        },
-      });
 
     const existingItem = user.cart.find(
       (item) => item.product.toString() === productId
@@ -56,8 +48,27 @@ const addToCart = async (req, res) => {
 
     if (existingItem) {
       existingItem.quantity += quantity || 1;
+      if (existingItem.quantity < 1) existingItem.quantity = 1;
+      if (existingItem.quantity > product.stock) {
+        return res.status(400).json({
+          status: 400,
+          data: {
+            data: null,
+            message: `Insufficient stock.`,
+          },
+        });
+      }
     } else {
-      user.cart.push({ product: productId, quantity: quantity || 1 });
+      user.cart.push({ product: productId, quantity: quantity < 1 ? 1 : quantity});
+      if (quantity > product.stock) {
+        return res.status(400).json({
+          status: 400,
+          data: {
+            data: null,
+            message: `Insufficient stock.`,
+          },
+        });
+      }
     }
 
     await user.save();

@@ -1,5 +1,6 @@
 // Controller to add a new product
 const Product = require("../../../models/Product");
+const Category = require("../../../models/Category");
 
 const addProduct = async (req, res) => {
   try {
@@ -33,10 +34,26 @@ const addProduct = async (req, res) => {
         },
       });
     }
+
+    // Check if category is valid
+    const category = await Category.findById(product.category);
+    if (!category) {
+      return res.status(400).json({
+        status: 400,
+        data: {
+          data: null,
+          message: "Invalid category",
+        },
+      });
+    }
+
+    category.productCount += 1;
+    await category.save();
     
     // Set default description if not provided (auto-generate)
     if (product.description === undefined) {
-      product.description = `${product.name} ${product.subcategory} ${product.category} suitable for ${product.tags}`;
+      const catName = category.name.toLowerCase();
+      product.description = `${product.name} ${product.subcategory} ${catName.slice(0, -1)} suitable for ${product.tags}`;
     } else {
       product.description = product.description;
     }

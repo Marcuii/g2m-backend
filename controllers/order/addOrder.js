@@ -143,6 +143,7 @@ const addOrder = async (req, res) => {
     const newOrder = new Order({
       user: userId,
       products: orderProducts,
+      orderNumber: `ORD-${Date.now()}`,
       subTotal,
       tax,
       shippingCost,
@@ -162,6 +163,7 @@ const addOrder = async (req, res) => {
     for (let item of products) {
       const product = await Product.findById(item.product);
       product.stock -= item.quantity;
+      product.sold = (product.sold || 0) + item.quantity;
       await product.save();
 
       // --- create stock notification if low
@@ -204,7 +206,7 @@ const addOrder = async (req, res) => {
     // --- update user order history
     const user = await User.findById(userId);
     user.orderCount = (user.orderCount || 0) + 1;
-    user.orders.push(newOrder.orderNumber);
+    user.orders.push(newOrder._id);
 
     // --- send confirmation email
     if (user && user.email) {

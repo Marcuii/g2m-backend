@@ -7,7 +7,7 @@ const router = express.Router();
 const adminInAuth = require('../middleware/adminInAuth');
 
 // Middleware to handle file uploads
-const { productUpload } = require('../utils/multer');
+const { productUpload, categoryUpload } = require('../utils/multer');
 
 // Announcement controller
 const sendAnnouncement = require('../controllers/adminIn/sendAnnouncement');
@@ -17,6 +17,12 @@ const getUserStats = require('../controllers/adminIn/usersControl/getUserStats')
 const getUser = require('../controllers/adminIn/usersControl/getUser');
 const getUsers = require('../controllers/adminIn/usersControl/getUsers');
 const editUserRole = require('../controllers/adminIn/usersControl/editUserRole');
+
+// Category management controllers
+const getCategories = require('../controllers/adminIn/categoriesControl/getCategories');
+const addCategory = require('../controllers/adminIn/categoriesControl/addCategory');
+const editCategory = require('../controllers/adminIn/categoriesControl/editCategory');
+const deleteCategory = require('../controllers/adminIn/categoriesControl/deleteCategory');
 
 // Product management controllers
 const getProducts = require('../controllers/adminIn/productsControl/getProducts');
@@ -54,6 +60,11 @@ router.route('/users/:userId').get(adminInAuth, getUser);
 router.route('/users').get(adminInAuth, getUsers);
 router.route('/users/:userId').patch(adminInAuth, editUserRole);
 
+// Category management routes
+router.route('/categories').get(adminInAuth, getCategories);
+router.route('/categories').post(adminInAuth, categoryUpload.single('image'), addCategory);
+router.route('/categories/:categoryName').patch(adminInAuth, categoryUpload.single('image'), editCategory);
+router.route('/categories/:categoryName').delete(adminInAuth, deleteCategory);
 
 // Product management routes
 router.route('/products').get(adminInAuth, getProducts);
@@ -79,6 +90,6 @@ router.route('/vouchers/:voucherId').delete(adminInAuth, deleteVoucher);
 // Notifications routes
 router.route('/notifications').get(adminInAuth, getNotifications);
 router.route('/notifications/:notificationId').patch(adminInAuth, markNotificationRead);
-router.route('/notifications/read-all').patch(adminInAuth, markNotificationsRead);
+router.route('/notifications/a/read-all').patch(adminInAuth, markNotificationsRead);
 
 module.exports = router;

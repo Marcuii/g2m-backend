@@ -5,11 +5,12 @@ const getProduct = async (req, res) => {
   try {
     const { productSKU } = req.params;
     const product = await Product.findOne({ sku: productSKU })
+      .populate("category", "name")
       .populate({
         path: "reviews",
+        select: "user rating comment images createdAt",
         populate: { path: "user", select: "name image" },
       })
-      .populate("reviews", "rating comment createdAt")
       .populate("createdBy lastUpdatedBy", "name");
 
     if (!product) {
@@ -18,7 +19,7 @@ const getProduct = async (req, res) => {
         data: { data: null, message: "Product not found" },
       });
     }
-    
+
     return res.status(200).json({
       status: 200,
       data: {

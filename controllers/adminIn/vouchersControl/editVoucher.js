@@ -5,6 +5,16 @@ const editVoucher = async (req, res) => {
   try {
     const { voucherId } = req.params;
 
+    if (req.body.code) {
+      const existingVoucher = await Voucher.findOne({ code: req.body.code });
+      if (existingVoucher && existingVoucher._id.toString() !== voucherId) {
+        return res.status(409).json({
+          status: 409,
+          data: { data: null, message: "Voucher code already exists" },
+        });
+      }
+    }
+
     const voucher = await Voucher.findByIdAndUpdate(
       voucherId,
       { ...req.body },

@@ -6,7 +6,7 @@ const {
 } = require("../../utils/token");
 
 const refreshAccessToken = async (req, res) => {
-  const { expiredToken } = req.body;
+  const expiredToken = req.cookies.accessToken;
   if (!expiredToken) {
     return res.status(404).json({
       status: 404,
@@ -14,46 +14,51 @@ const refreshAccessToken = async (req, res) => {
     });
   }
 
-  const oldRefreshToken = req.cookies.refreshToken;
-  if (!oldRefreshToken) {
-    return res.status(404).json({
-      status: 404,
-      data: { data: null, message: "No refresh token" },
-    });
-  }
-
-  const decodedExpired = jwt.decode(expiredToken);
-  const decodedRefresh = jwt.decode(oldRefreshToken);
-
-  if (
-    !decodedExpired ||
-    !decodedRefresh ||
-    decodedExpired.id !== decodedRefresh.id
-  ) {
-    return res.status(401).json({
-      status: 401,
-      data: { data: null, message: "Invalid token" },
-    });
-  }
-
   try {
-    const user = await User.findOne({
-      "sessions.refreshToken": oldRefreshToken,
-    });
-    if (!user) {
+    const decodedExpired = jwt.decode(expiredToken);
+    const userId = decodedExpired?.id;
+
+    if (!decodedExpired || !userId) {
       return res.status(401).json({
         status: 401,
-        data: { data: null, message: "Invalid refresh token" },
+        data: { data: null, message: "Invalid token" },
       });
     }
 
-    const session = user.sessions.find(
-      (s) => s.refreshToken === oldRefreshToken
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(401).json({
+        status: 401,
+        data: { data: null, message: "Invalid user" },
+      });
+    }
+
+    const sessions = user.sessions;
+    if (!sessions || sessions.length === 0) {
+      return res.status(404).json({
+        status: 404,
+        data: { data: null, message: "No active sessions found" },
+      });
+    }
+
+    const currentSessionIndex = sessions.findIndex(
+      (s) => s.accessToken === expiredToken
     );
-    if (!session) {
+
+    if (currentSessionIndex === -1) {
       return res.status(404).json({
         status: 404,
         data: { data: null, message: "Session not found" },
+      });
+    }
+
+    const oldRefreshToken = sessions[currentSessionIndex].refreshToken;
+    const decodedRefresh = jwt.decode(oldRefreshToken);
+
+    if (!decodedRefresh || decodedExpired.id !== decodedRefresh.id) {
+      return res.status(401).json({
+        status: 401,
+        data: { data: null, message: "Invalid token" },
       });
     }
 
@@ -62,6 +67,9 @@ const refreshAccessToken = async (req, res) => {
       process.env.JWT_REFRESH_SECRET,
       async (err, decoded) => {
         if (err) {
+          sessions.splice(currentSessionIndex, 1);
+          user.sessions = sessions;
+          await user.save();
           return res.status(401).json({
             status: 401,
             data: { data: null, message: "Expired refresh token" },
@@ -71,20 +79,23 @@ const refreshAccessToken = async (req, res) => {
         const newAccessToken = generateAccessToken(decoded.id, user.role);
         const newRefreshToken = generateRefreshToken(decoded.id);
 
-        session.refreshToken = newRefreshToken;
-        session.lastUsed = new Date();
+        sessions[currentSessionIndex].accessToken = newAccessToken;
+        sessions[currentSessionIndex].refreshToken = newRefreshToken;
+        sessions[currentSessionIndex].lastUsed = new Date();
+        user.sessions = sessions;
         await user.save();
 
-        res.cookie("refreshToken", newRefreshToken, {
+        res.cookie("accessToken", newAccessToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           sameSite: "strict",
+          maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
         });
 
         return res.status(200).json({
           status: 200,
           data: {
-            token: newAccessToken,
+            data: null,
             message: "Access token refreshed successfully",
           },
         });

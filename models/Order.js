@@ -53,7 +53,7 @@ const orderSchema = new mongoose.Schema(
       city: { type: String, required: true },
       street1: { type: String, required: true },
       street2: { type: String },
-      zip: { type: String, required: true },
+      zip: { type: String },
       phone: { type: String, required: true },
     },
     billingAddress: {
@@ -71,6 +71,7 @@ const orderSchema = new mongoose.Schema(
       type: String,
       enum: [
         "pending",
+        "confirmed",
         "packaged",
         "shipped",
         "delivered",

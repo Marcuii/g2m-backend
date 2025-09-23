@@ -67,6 +67,7 @@ const getProducts = async (req, res) => {
     // Query
     const products = await Product.find(filter)
       .select("-isActive -createdBy -lastUpdatedBy -__v -createdAt -updatedAt ")
+      .populate("category", "name")
       .sort(sortOptions)
       .skip(skip)
       .limit(Number(limit));

@@ -43,11 +43,11 @@ const resetPassword = async (req, res) => {
 
     await user.save();
 
-    await sendEmail(
-      email,
-      "Your G2M Account's Password Has Been Reset",
-      `<p>Your password has been successfully reset. You can now log in to your account.</p>`
-    );
+    await sendEmail({
+      to: email,
+      subject: "Your G2M Account's Password Has Been Reset",
+      html: `<p>Your password has been successfully reset. You can now log in to your account.</p>`,
+    });
 
     return res.status(200).json({
       status: 200,

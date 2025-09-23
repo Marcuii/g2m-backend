@@ -2,37 +2,27 @@ const jwt = require("jsonwebtoken");
 const User = require("../../models/User");
 
 const logoutUser = async (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
+  const accessToken = req.cookies?.accessToken;
 
   try {
-    if (refreshToken) {
-      const user = await User.findOne({
-        "sessions.refreshToken": refreshToken,
-      });
-
-      if (user) {
-        user.sessions = user.sessions.filter(
-          (s) => s.refreshToken !== refreshToken
-        );
-
-        user.sessions = user.sessions.filter((s) => {
-          try {
-            jwt.verify(s.refreshToken, process.env.JWT_REFRESH_SECRET);
-            return true;
-          } catch (err) {
-            return false;
-          }
-        });
-
+    if (accessToken) {
+      const decodeUser = jwt.decode(accessToken);
+      if (decodeUser?.id) {
+        const user = await User.findById(decodeUser.id).select("sessions");
+        if (user.sessions) {
+          user.sessions = user.sessions.filter(
+            (s) => s.accessToken !== accessToken
+          );
+        }
         await user.save();
       }
-    }
 
-    res.clearCookie("refreshToken", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-    });
+      res.clearCookie("accessToken", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+      });
+    }
 
     return res.status(204).json({
       status: 204,

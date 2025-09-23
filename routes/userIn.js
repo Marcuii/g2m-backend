@@ -36,6 +36,9 @@ const deleteAddress = require('../controllers/userIn/address/deleteAddress');
 const deleteSession = require('../controllers/userIn/session/deleteSession');
 const deleteSessions = require('../controllers/userIn/session/deleteSessions');
 
+// Ticket management controller
+const addTicket = require('../controllers/userIn/addTicket');
+
 // Routes
 // Profile management routes
 router.route("/profile").get(userInAuth, getProfile); // General profile retrieval
@@ -63,5 +66,8 @@ router.route("/address/:addressId").delete(userInAuth, deleteAddress);
 // Session management routes
 router.route("/sessions/:sessionId").delete(userInAuth, deleteSession);
 router.route("/sessions").delete(userInAuth, deleteSessions);
+
+// Ticket management route
+router.route("/tickets").post(userInAuth, addTicket);
 
 module.exports = router;

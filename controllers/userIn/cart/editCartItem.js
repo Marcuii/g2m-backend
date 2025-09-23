@@ -1,5 +1,6 @@
 // Controller to update the quantity of a specific item in the user's cart
 const User = require("../../../models/User");
+const Product = require("../../../models/Product");
 
 const editCartItem = async (req, res) => {
   try {
@@ -22,6 +23,24 @@ const editCartItem = async (req, res) => {
         data: {
           data: null,
           message: "User not found",
+        },
+      });
+
+    const product = await Product.findById(productId);
+    if (!product)
+      return res.status(404).json({
+        status: 404,
+        data: {
+          data: null,
+          message: "Product not found",
+        },
+      });
+    if (quantity > product.stock)
+      return res.status(400).json({
+        status: 400,
+        data: {
+          data: null,
+          message: `Insufficient stock.`,
         },
       });
 

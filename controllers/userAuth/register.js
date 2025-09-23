@@ -50,16 +50,16 @@ const register = async (req, res) => {
 
     const verifyUrl = `${process.env.CLIENT_URL}/verify?email=${newUser.email}&token=${token}`;
 
-    await sendEmail(
-      email,
-      "Confirm your G2M Account",
-      `<h2>Welcome to G2M!</h2>
+    await sendEmail({
+      to: email,
+      subject: "Confirm your G2M Account",
+      html: `<h2>Welcome to G2M!</h2>
       <p>Please confirm your email to activate your account.</p>
       <p><a href="${verifyUrl}">Click here to verify</a></p>
       <br/>
       <p>This link will expire in 1 hour.</p>
-      <p><strong>Note:</strong> If you don’t verify your email within 30 days, your account will be automatically deleted.</p>`
-    );
+      <p><strong>Note:</strong> If you don’t verify your email within 30 days, your account will be automatically deleted.</p>`,
+    });
 
     return res.status(201).json({
       status: 201,

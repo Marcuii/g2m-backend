@@ -8,7 +8,6 @@ const cloudinary = require("../config/cloudinary");
 const productsStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
-    console.log("File received for upload:", file);
     const folder = "g2m/products";
     const productSKU = req.body.sku || req.params.productSKU || "temp"; // must come from req
 
@@ -39,6 +38,19 @@ const productsStorage = new CloudinaryStorage({
   },
 });
 
+// Category images will be stored in 'g2m/categories' folder
+const categoriesStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "g2m/categories",
+    allowedFormats: ["jpg", "png", "jpeg"],
+    public_id: async (req, file) => {
+      const catName = req.body.name || req.params.categoryName || "temp"; // must come from req
+      return `category_${catName}`;
+    }
+  },
+});
+
 // Avatar images will be stored in 'g2m/avatars' folder
 const avatarStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
@@ -65,7 +77,8 @@ const reviewStorage = new CloudinaryStorage({
 });
 
 const productUpload = multer({ storage: productsStorage });
+const categoryUpload = multer({ storage: categoriesStorage });
 const avatarUpload = multer({ storage: avatarStorage });
 const reviewUpload = multer({ storage: reviewStorage });
 
-module.exports = { productUpload, avatarUpload, reviewUpload };
+module.exports = { productUpload, categoryUpload, avatarUpload, reviewUpload };

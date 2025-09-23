@@ -37,6 +37,16 @@ const deleteSession = async (req, res) => {
       });
     }
 
+    if (session.accessToken === req.cookies.accessToken) {
+      return res.status(400).json({
+        status: 400,
+        data: {
+          data: null,
+          message: "Cannot delete the current session (use logout instead)",
+        },
+      });
+    }
+
     session.deleteOne();
 
     user.sessions = user.sessions.filter((s) => {

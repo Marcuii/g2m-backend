@@ -49,12 +49,12 @@ const editEmail = async (req, res) => {
     const verifyUrl = `${process.env.CLIENT_URL}/verify?email=${user.pendingEmail}&token=${token}`;
 
     // Send verification email
-    await sendEmail(
-      user.pendingEmail,
-      "Verify your new email",
-      `Click here: ${verifyUrl}
+    await sendEmail({
+      to: user.pendingEmail,
+      subject: "Verify your new email",
+      html: `Click here: ${verifyUrl}
       <p>This link will expire at midnight (in ${Math.round(diffMs / 360000) / 10} hours).</p>`
-    );
+  });
 
     return res.status(200).json({
       status: 200,

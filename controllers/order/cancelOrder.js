@@ -54,7 +54,7 @@ const cancelOrder = async (req, res) => {
     }
 
     // Cancel the order
-    order.status = "canceled";
+    order.status = "cancelled";
     order.canceledAt = Date.now();
     order.lastUpdatedBy = req.user;
     await order.save();
@@ -63,6 +63,7 @@ const cancelOrder = async (req, res) => {
     for (let item of order.products) {
       const product = await Product.findById(item.product);
       product.stock += item.quantity;
+      product.sold = (product.sold || 0) - item.quantity;
       await product.save();
     }
 

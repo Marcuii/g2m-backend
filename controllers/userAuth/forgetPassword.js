@@ -35,14 +35,14 @@ const requestPasswordReset = async (req, res) => {
 
     const resetUrl = `${process.env.CLIENT_URL}/reset-password?email=${email}&token=${resetToken}`;
 
-    await sendEmail(
-      email,
-      "Reset your G2M password",
-      `<h2>Password Reset</h2>
+    await sendEmail({
+      to: email,
+      subject: "Reset your G2M password",
+      html: `<h2>Password Reset</h2>
        <p>Click the link below to reset your password:</p>
        <a href="${resetUrl}">${resetUrl}</a>
        <p>This link will expire in 15 minutes.</p>`
-    );
+    });
 
     return res.status(200).json({
       status: 200,

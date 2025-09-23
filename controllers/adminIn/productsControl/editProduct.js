@@ -1,5 +1,6 @@
 // Controller for editing a product in the admin panel
 const Product = require("../../../models/Product");
+const Category = require("../../../models/Category");
 
 const editProduct = async (req, res) => {
   try {
@@ -29,6 +30,31 @@ const editProduct = async (req, res) => {
             message: "Another product with this SKU already exists",
           },
         });
+      }
+    }
+
+    // Check if category is valid
+    if (productData.category) {
+      const category = await Category.findById(productData.category);
+      if (!category) {
+        return res.status(400).json({
+          status: 400,
+          data: {
+            data: null,
+            message: "Invalid category",
+          },
+        });
+      }
+
+      // If category is changed, update product counts
+      if (category._id.toString() !== product.category.toString()) {
+        const oldCategory = await Category.findById(product.category);
+        if (oldCategory) {
+          oldCategory.productCount = Math.max(0, oldCategory.productCount - 1);
+          await oldCategory.save();
+        }
+        category.productCount += 1;
+        await category.save();
       }
     }
 

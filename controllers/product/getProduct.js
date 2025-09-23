@@ -9,11 +9,12 @@ const getProduct = async (req, res) => {
       .select(
         "-isActive -createdBy -lastUpdatedBy -__v -createdAt -updatedAt "
       )
+      .populate("category", "name")
       .populate({
         path: "reviews",
+        select: "user rating comment images createdAt",
         populate: { path: "user", select: "name image" },
-      })
-      .populate("reviews", "rating comment images createdAt");
+      });
 
     if (!product) {
       return res.status(404).json({

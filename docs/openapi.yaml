@@ -3,9 +3,15 @@ info:
   title: G2M Backend API
   version: 1.0.0
   description: |
-    REST API for the G2M e‑commerce platform. Includes authentication, user profile management,
-    products, orders, reviews, vouchers, and admin endpoints. JWT-based auth with refresh sessions,
-    Cloudinary uploads, and Nodemailer emails.
+    REST API for the G2M e‑commerce platform. Includes cookie-based authentication, category management,
+    user profile management, products, orders, reviews, vouchers, and admin endpoints. 
+    Features JWT auth with HTTP-only cookies, Cloudinary uploads, and Nodemailer emails.
+    
+    **Authentication**: This API uses HTTP-only cookies for secure token storage. Access tokens are 
+    automatically included in requests when properly authenticated. No Authorization header required.
+    
+    **File Uploads**: Supports multipart/form-data uploads to Cloudinary for product images, 
+    category images, user avatars, and review images.
 servers:
   - url: http://localhost:5000/api
     description: Local
@@ -13,19 +19,30 @@ servers:
     description: Production
 
 tags:
+  - name: Health
+    description: API health and status endpoints
   - name: Auth
+    description: Authentication and session management
+  - name: Categories
+    description: Product category management
   - name: Products
+    description: Product catalog and management
   - name: Reviews
+    description: Product review system
   - name: Orders
+    description: Order management and processing
   - name: User
+    description: User account and profile management
   - name: Admin
+    description: Administrative operations
 
 components:
   securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: accessToken
+      description: HTTP-only cookie containing JWT access token
   schemas:
     ApiResponse:
       type: object
@@ -36,23 +53,60 @@ components:
           type: object
           nullable: true
           additionalProperties: true
+    
+    Category:
+      type: object
+      properties:
+        _id: { type: string }
+        name: { type: string }
+        description: { type: string }
+        image: { type: string }
+        productCount: { type: integer }
+        isActive: { type: boolean }
+        createdBy: { type: string }
+        lastUpdatedBy: { type: string }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    
     User:
       type: object
       properties:
-        _id:
-          type: string
-        email:
-          type: string
-          format: email
-        role:
-          type: string
-          enum: [customer, admin]
-        name:
-          type: string
-        image:
-          type: string
-        isVerified:
-          type: boolean
+        _id: { type: string }
+        email: { type: string, format: email }
+        role: { type: string, enum: [customer, admin] }
+        name: { type: string }
+        phone: { type: string }
+        image: { type: string }
+        isVerified: { type: boolean }
+        isFirstLogin: { type: boolean }
+        orderCount: { type: integer }
+        cart: 
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItem'
+        wishlist:
+          type: array
+          items: { type: string }
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+    
+    Address:
+      type: object
+      properties:
+        _id: { type: string }
+        firstName: { type: string }
+        lastName: { type: string }
+        country: { type: string }
+        state: { type: string }
+        city: { type: string }
+        street1: { type: string }
+        street2: { type: string }
+        zip: { type: string }
+        phone: { type: string }
+        type: { type: string, enum: [shipping, billing] }
+    
     Product:
       type: object
       properties:
@@ -60,44 +114,135 @@ components:
         sku: { type: string }
         name: { type: string }
         description: { type: string }
-        category: { type: string }
+        category: 
+          type: object
+          properties:
+            _id: { type: string }
+            name: { type: string }
         subcategory: { type: string }
+        tags: { type: array, items: { type: string } }
+        sortTag: { type: string, enum: ["Today's Offer", "New Arrival", "Best Seller", "Featured", "Others"] }
+        stock: { type: integer }
         price: { type: number }
         discountPrice: { type: number, nullable: true }
+        discountActive: { type: boolean }
+        sold: { type: integer }
+        isActive: { type: boolean }
         mainImage: { type: string }
         images: { type: array, items: { type: string } }
+        size:
+          type: object
+          properties:
+            width: { type: number }
+            height: { type: number }
+            depth: { type: number }
         avgRating: { type: number }
-        numReviews: { type: number }
+        numReviews: { type: integer }
+        createdBy: { type: string }
+        lastUpdatedBy: { type: string }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    
     Order:
       type: object
       properties:
+        _id: { type: string }
         orderNumber: { type: string }
-        status:
-          type: string
-          enum: [pending, packaged, shipped, delivered, cancelled, refunded]
-        totalAmount: { type: number }
+        user: { type: string }
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              product: { type: string }
+              sku: { type: string }
+              name: { type: string }
+              mainImage: { type: string }
+              quantity: { type: integer }
+              priceAtPurchase: { type: number }
         subTotal: { type: number }
         tax: { type: number }
         shippingCost: { type: number }
         discountAmount: { type: number }
+        totalAmount: { type: number }
+        shippingAddress: { $ref: '#/components/schemas/Address' }
+        billingAddress: { $ref: '#/components/schemas/Address' }
+        status:
+          type: string
+          enum: [pending, confirmed, packaged, shipped, delivered, cancelled, refunded]
+        shippedAt: { type: string, format: date-time, nullable: true }
+        deliveredAt: { type: string, format: date-time, nullable: true }
+        canceledAt: { type: string, format: date-time, nullable: true }
+        notes: { type: string }
+        paymentInfo:
+          type: array
+          items:
+            type: object
+            properties:
+              amount: { type: number }
+              method: { type: string, enum: [credit_card, cod, bank_transfer, wallet] }
+              status: { type: string, enum: [pending, completed, failed] }
+        usedVoucher: { type: string, nullable: true }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    
     Review:
       type: object
       properties:
         _id: { type: string }
+        user: { type: string }
         product: { type: string }
         rating: { type: integer, minimum: 1, maximum: 5 }
         comment: { type: string }
         images: { type: array, items: { type: string } }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    
     Voucher:
       type: object
       properties:
+        _id: { type: string }
         code: { type: string }
         type: { type: string, enum: [percentage, fixed] }
         discount: { type: number }
+        expiryDate: { type: string, format: date-time }
         isActive: { type: boolean }
+        minPurchase: { type: number }
+        usageLimit: { type: integer }
+        timesUsed: { type: integer }
+        createdBy: { type: string }
+        lastUpdatedBy: { type: string }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    
+    CartItem:
+      type: object
+      properties:
+        product:
+          type: object
+          properties:
+            _id: { type: string }
+            name: { type: string }
+            mainImage: { type: string }
+            price: { type: number }
+        quantity: { type: integer }
+        _id: { type: string }
+    
+    CheckoutResponse:
+      type: object
+      properties:
+        user:
+          type: object
+          properties:
+            cart:
+              type: array
+              items:
+                $ref: '#/components/schemas/CartItem'
+        message: { type: string }
+        subtotal: { type: number }
 
 security:
-  - bearerAuth: []
+  - cookieAuth: []
 
 paths:
   /:
@@ -139,7 +284,9 @@ paths:
   /auth/login:
     post:
       tags: [Auth]
-      summary: Login
+      summary: User login
+      description: Authenticate user and set HTTP-only cookie with access token
+      security: []
       requestBody:
         required: true
         content:
@@ -151,8 +298,31 @@ paths:
                 email: { type: string, format: email }
                 password: { type: string, format: password }
       responses:
-        '200': { description: OK }
-        '429': { description: Too many requests }
+        '200':
+          description: Login successful - access token set in HTTP-only cookie
+          headers:
+            Set-Cookie:
+              description: HTTP-only cookie containing access token
+              schema:
+                type: string
+                example: "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...; HttpOnly; Secure; SameSite=Strict; Max-Age=3600"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: integer, example: 200 }
+                  data:
+                    type: object
+                    properties:
+                      data: { type: object, nullable: true }
+                      message: { type: string, example: "Login successful" }
+        '400':
+          description: Invalid credentials
+        '403':
+          description: Email not verified
+        '429':
+          description: Too many login attempts
 
   /auth/verify/{token}/{email}:
     get:
@@ -214,16 +384,47 @@ paths:
   /auth/logout:
     post:
       tags: [Auth]
-      summary: Logout
+      summary: User logout
+      description: Logout user and clear HTTP-only cookie
       responses:
-        '200': { description: Logged out }
+        '204':
+          description: Logged out successfully - cookie cleared
+          headers:
+            Set-Cookie:
+              description: Clears the access token cookie
+              schema:
+                type: string
+                example: "accessToken=; HttpOnly; Secure; SameSite=Strict; Max-Age=0"
 
   /auth/refresh:
     post:
       tags: [Auth]
       summary: Refresh access token
+      description: Refresh expired access token using cookie-based refresh flow
       responses:
-        '200': { description: New access token }
+        '200':
+          description: New access token set in cookie
+          headers:
+            Set-Cookie:
+              description: HTTP-only cookie with new access token
+              schema:
+                type: string
+                example: "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...; HttpOnly; Secure; SameSite=Strict; Max-Age=3600"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: integer, example: 200 }
+                  data:
+                    type: object
+                    properties:
+                      data: { type: object, nullable: true }
+                      message: { type: string, example: "Access token refreshed successfully" }
+        '401':
+          description: Invalid or expired refresh token
+        '404':
+          description: No expired token or session not found
 
   /products:
     get:
@@ -256,6 +457,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Product'
+
+  /products/c/categories:
+    get:
+      tags: [Categories]
+      summary: List all active categories (public)
+      security: []
+      responses:
+        '200':
+          description: List of active categories
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: integer, example: 200 }
+                  data:
+                    type: object
+                    properties:
+                      categories:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            _id: { type: string }
+                            name: { type: string }
+                            description: { type: string }
+                            image: { type: string }
+                            productCount: { type: integer }
+                      message: { type: string, example: "Categories retrieved successfully" }
 
   /reviews:
     get:
@@ -315,6 +545,47 @@ paths:
                     type: object
       responses:
         '201': { description: Created }
+
+  /orders/voucher:
+    get:
+      tags: [Orders]
+      summary: Validate voucher
+      description: Check if a voucher is valid and calculate discount amount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code, subTotal]
+              properties:
+                code: { type: string, description: "Voucher code" }
+                subTotal: { type: number, description: "Cart subtotal for discount calculation" }
+      responses:
+        '200':
+          description: Voucher is valid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: integer, example: 200 }
+                  data:
+                    type: object
+                    properties:
+                      voucher:
+                        type: object
+                        properties:
+                          code: { type: string }
+                          type: { type: string }
+                          discount: { type: number }
+                          expiryDate: { type: string, format: date-time }
+                      discountAmount: { type: number }
+                      message: { type: string, example: "Voucher applied successfully" }
+        '400':
+          description: Voucher expired, usage limit reached, or minimum purchase not met
+        '404':
+          description: Voucher not found
 
   /orders/{orderNumber}:
     get:
@@ -440,7 +711,7 @@ paths:
       summary: Get checkout details
       description: Retrieves cart items with calculated subtotal for checkout process
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       responses:
         '200':
           description: Checkout details retrieved successfully
@@ -564,7 +835,165 @@ paths:
       responses:
         '200': { description: OK }
 
+  /user/tickets:
+    post:
+      tags: [User]
+      summary: Submit support ticket
+      description: Send a support ticket to the admin team via email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [subject, type, message]
+              properties:
+                subject: { type: string, description: "Ticket subject/title" }
+                type: { type: string, description: "Ticket type/category" }
+                message: { type: string, description: "Detailed message describing the issue" }
+      responses:
+        '201':
+          description: Ticket submitted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: integer, example: 201 }
+                  data:
+                    type: object
+                    properties:
+                      data: { type: object, nullable: true }
+                      message: { type: string, example: "Ticket created successfully" }
+        '400':
+          description: Missing required fields
+        '404':
+          description: User not found
+
   # Admin subset examples (all require admin JWT)
+  /admin/categories:
+    get:
+      tags: [Admin]
+      summary: List all categories (admin view)
+      description: Get all categories including inactive ones for admin management
+      responses:
+        '200':
+          description: Categories retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: integer, example: 200 }
+                  data:
+                    type: object
+                    properties:
+                      categories:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Category'
+                      message: { type: string, example: "Categories retrieved successfully" }
+    post:
+      tags: [Admin]
+      summary: Create new category
+      description: Add a new product category with image upload
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [name, image]
+              properties:
+                name: { type: string, description: "Category name (must be unique)" }
+                description: { type: string, description: "Category description" }
+                image: { type: string, format: binary, description: "Category image file" }
+      responses:
+        '201':
+          description: Category created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: integer, example: 201 }
+                  data:
+                    type: object
+                    properties:
+                      category:
+                        $ref: '#/components/schemas/Category'
+                      message: { type: string, example: "Category added successfully" }
+        '400':
+          description: Bad request (missing fields or duplicate name)
+
+  /admin/categories/{categoryName}:
+    patch:
+      tags: [Admin]
+      summary: Update category
+      description: Update an existing category by name
+      parameters:
+        - in: path
+          name: categoryName
+          required: true
+          schema: { type: string }
+          description: "Current category name"
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name: { type: string, description: "New category name" }
+                description: { type: string, description: "Updated description" }
+                image: { type: string, format: binary, description: "New category image" }
+      responses:
+        '200':
+          description: Category updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: integer, example: 200 }
+                  data:
+                    type: object
+                    properties:
+                      category:
+                        $ref: '#/components/schemas/Category'
+                      message: { type: string, example: "Category updated successfully" }
+        '404':
+          description: Category not found
+        '400':
+          description: Bad request (duplicate name)
+    delete:
+      tags: [Admin]
+      summary: Delete category
+      description: Delete a category (only if no products are associated)
+      parameters:
+        - in: path
+          name: categoryName
+          required: true
+          schema: { type: string }
+          description: "Category name to delete"
+      responses:
+        '200':
+          description: Category deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: integer, example: 200 }
+                  data:
+                    type: object
+                    properties:
+                      data: { type: object, nullable: true }
+                      message: { type: string, example: "Category deleted successfully" }
+        '404':
+          description: Category not found
+        '400':
+          description: Cannot delete category with associated products
+
   /admin/users:
     get:
       tags: [Admin]
@@ -605,3 +1034,117 @@ paths:
                     format: binary
       responses:
         '201': { description: Created }
+
+  /admin/notifications:
+    get:
+      tags: [Admin]
+      summary: Get admin notifications
+      description: Retrieve all notifications for admin users
+      responses:
+        '200':
+          description: Notifications retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: integer, example: 200 }
+                  data:
+                    type: object
+                    properties:
+                      notifications: { type: array, items: { type: object } }
+                      message: { type: string, example: "Notifications retrieved successfully" }
+
+  /admin/notifications/{notificationId}:
+    patch:
+      tags: [Admin]
+      summary: Mark notification as read
+      description: Mark a specific notification as read
+      parameters:
+        - in: path
+          name: notificationId
+          required: true
+          schema: { type: string }
+          description: "Notification ID"
+      responses:
+        '200':
+          description: Notification marked as read
+        '404':
+          description: Notification not found
+
+  /admin/notifications/a/read-all:
+    patch:
+      tags: [Admin]
+      summary: Mark all notifications as read
+      description: Mark all admin notifications as read
+      responses:
+        '200':
+          description: All notifications marked as read
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: integer, example: 200 }
+                  data:
+                    type: object
+                    properties:
+                      data: { type: object, nullable: true }
+                      message: { type: string, example: "All notifications marked as read" }
+
+  /admin/notifications:
+    get:
+      tags: [Admin]
+      summary: Get admin notifications
+      description: Retrieve all notifications for admin users
+      responses:
+        '200':
+          description: Notifications retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: integer, example: 200 }
+                  data:
+                    type: object
+                    properties:
+                      notifications: { type: array, items: { type: object } }
+                      message: { type: string, example: "Notifications retrieved successfully" }
+
+  /admin/notifications/{notificationId}:
+    patch:
+      tags: [Admin]
+      summary: Mark notification as read
+      description: Mark a specific notification as read
+      parameters:
+        - in: path
+          name: notificationId
+          required: true
+          schema: { type: string }
+          description: "Notification ID"
+      responses:
+        '200':
+          description: Notification marked as read
+        '404':
+          description: Notification not found
+
+  /admin/notifications/a/read-all:
+    patch:
+      tags: [Admin]
+      summary: Mark all notifications as read
+      description: Mark all admin notifications as read
+      responses:
+        '200':
+          description: All notifications marked as read
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: integer, example: 200 }
+                  data:
+                    type: object
+                    properties:
+                      data: { type: object, nullable: true }
+                      message: { type: string, example: "All notifications marked as read" }

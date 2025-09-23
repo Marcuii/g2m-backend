@@ -36,15 +36,17 @@ app.use(cookieParser());
 // Custom Middleware - stop if in development mode
 if (process.env.NODE_ENV === "production") {
   app.use(whiteListOrigins);
-  app.use(apiKeyMiddleware);
 }
+app.use(apiKeyMiddleware);
 
 // API Docs (Swagger UI)
-try {
-  const openapi = YAML.load(`${__dirname}/docs/openapi.yaml`);
-  app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(openapi));
-} catch (e) {
-  console.warn("Swagger docs not loaded:", e.message);
+if (process.env.NODE_ENV !== "production") {
+  try {
+    const openapi = YAML.load(`${__dirname}/docs/openapi.yaml`);
+    app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(openapi));
+  } catch (e) {
+    console.warn("Swagger docs not loaded:", e.message);
+  }
 }
 
 const adminInRouter = require("./routes/adminIn");

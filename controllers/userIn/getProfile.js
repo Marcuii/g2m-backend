@@ -22,7 +22,7 @@ const getProfile = async (req, res) => {
         select: "name mainImage price",
       })
       .populate({
-        path: "wishlist.product",
+        path: "wishlist",
         select: "name mainImage price",
       });
     return res.status(200).json({

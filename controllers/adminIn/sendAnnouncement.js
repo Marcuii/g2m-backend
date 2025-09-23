@@ -25,11 +25,11 @@ const sendAnnouncement = async (req, res) => {
 
     // Send emails in bulk
     const emailList = users.map((u) => u.email);
-    await sendEmail(
-      emailList,
+    await sendEmail({
+      to: emailList,
       subject,
-      message, // You can make this more styled
-    );
+      html: message, // You can make this more styled
+  });
 
     return res.status(200).json({
       status: 200,
